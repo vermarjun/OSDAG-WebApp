@@ -12,25 +12,24 @@ interface ButtonVariant {
 
 const buttonVariants: Record<ButtonType, ButtonVariant> = {
   primary: {
-    base: 'bg-blue-600 text-white',
-    hover: 'hover:bg-blue-700',
+    base: 'bg-[#925A5B] text-white',
+    hover: 'hover:bg-gray-500',
     size: 'px-6 py-3 text-lg',
   },
   secondary: {
-    base: 'bg-gray-200 text-gray-800',
-    hover: 'hover:bg-gray-300',
+    base: 'bg-[#925A5B] text-gray-800',
+    hover: 'hover:bg-gray-500',
     size: 'px-5 py-2 text-md',
   },
   tertiary: {
-    base: 'bg-green-500 text-white',
-    hover: 'hover:bg-green-600',
-    size: 'px-4 py-2 text-sm',
+    base: 'bg-[#925A5B] text-white',
+    hover: 'hover:bg-gray-500',
+    size: 'px-4 py-2 text-sm w-fit',
   },
 };
 
 interface ButtonProps {
-  name: string;
-  link: string;
+  name: string; 
   type: ButtonType;
   className?: string;
   onClick?: () => void;
