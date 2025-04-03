@@ -3,7 +3,8 @@ import ImageSelect , { ImageOption} from './ui/imagedropdown';
 import SelectDropdown from './ui/customdropdown';
 import InputField from './ui/custominputfield';
 import Button from './ui/button';
-
+import { hitBackend } from './outputdock';
+import { useData } from './outputdock';
 const connectivityOptions: ImageOption[] = [
   {
     value: "column-flange-beam-web",
@@ -18,15 +19,30 @@ const connectivityOptions: ImageOption[] = [
 ];
 
 const InputDock = () => {
-  const [shearForce, setShearForce] = useState('');
-  const [axialForce, setAxialForce] = useState('');
-  const [coloumn, setColoumn] = useState<Record<string, string>>({});
-  const [beam, setBeam] = useState<Record<string, string>>({});
-  const [material, setMaterial] = useState<Record<string, string>>({});
-  const [boltDiameter, setBoltDiameter] = useState<Record<string, string>>({});
-  const [boltType, setBoltType] = useState<Record<string, string>>({});
-  const [boltClass, setBoltClass] = useState<Record<string, string>>({});
-  const [plateThickness, setPlateThickness] = useState<Record<string, string>>({});
+  const connection_type = "column_flange_beam_web"
+  const [shear_force, setShearForce] = useState<string>('');
+  const [axial_force, setAxialForce] = useState<string>('');
+  const [column_section, setColoumn] = useState('');
+  const [beam_section, setBeam] = useState('');
+  const [material_grade, setMaterial] = useState('');
+  const [bolt_diameter, setBoltDiameter] = useState('');
+  const [bolt_type, setBoltType] = useState('');
+  const [bolt_property_class, setBoltClass] = useState('');
+  const [plate_thickness, setPlateThickness] = useState('');
+
+  const { setFormValues } = useData();
+
+  function resetClicked(){
+    setShearForce('');
+    setAxialForce('')
+    setColoumn('')
+    setBeam('')
+    setMaterial('')
+    setBoltDiameter('')
+    setBoltType('')
+    setBoltClass('')
+    setPlateThickness('')
+  }
 
   return (
     <div className="w-1/3 border h-screen border-gray-300 bg-[#F0F0F0] shadow-sm flex flex-col justify-start items-center">
@@ -49,33 +65,39 @@ const InputDock = () => {
         <SelectDropdown
           name="Column Section"
           options={[
-            { value: "section1", label: "Section 1" },
-            { value: "section2", label: "Section 2" },
+            { value: "HB150", label: "HB150" },
+            { value: "HB150*", label: "HB150*" },
+            { value: "HB200", label: "HB200" },
           ]}
-          selectedValues={coloumn}
-          setSelectedValues={setColoumn}
+          selectedValue={column_section}
+          setSelectedValue={setColoumn}
         />
 
         {/* Beam Section */}
         <SelectDropdown
           name="Beam Section"
           options={[
-            { value: "section1", label: "Section 1" },
-            { value: "section2", label: "Section 2" },
+            { value: "JB150", label: "JB150" },
+            { value: "JB175", label: "JB175" },
+            { value: "JB200", label: "JB200" },
+            { value: "JB225", label: "JB225" },
           ]}
-          selectedValues={beam}
-          setSelectedValues={setBeam}
+          selectedValue={beam_section}
+          setSelectedValue={setBeam}
         />
 
         {/* Material */}
         <SelectDropdown
           name="Meterial"
           options={[
-            { value: "section1", label: "Section 1" },
-            { value: "section2", label: "Section 2" },
+            { value: "E 165 (Fe 290)", label: "E 165 (Fe 290)" },
+            { value: "E 250 (Fe 410 W)A", label: "E 250 (Fe 410 W)A" },
+            { value: "E 250 (Fe 410 W)B", label: "E 250 (Fe 410 W)B" },
+            { value: "E 250 (Fe 410 W)C", label: "E 250 (Fe 410 W)C" },
+            { value: "E 300 (Fe 440)", label: "E 300 (Fe 440)" },
           ]}
-          selectedValues={material}
-          setSelectedValues={setMaterial}
+          selectedValue={material_grade}
+          setSelectedValue={setMaterial}
         />
 
         {/* Factored Loads */}
@@ -86,7 +108,7 @@ const InputDock = () => {
           <InputField
             label="Shear Force (kN)"
             name="shearForce"
-            value={shearForce}
+            value={shear_force}
             className='w-[70%]'
             onChange={(e) => setShearForce(e.target.value)}
             />
@@ -96,7 +118,7 @@ const InputDock = () => {
             className="w-[70%]"
             label="Axial Force (kN)"
             name="axialForce"
-            value={axialForce}
+            value={axial_force}
             onChange={(e) => setAxialForce(e.target.value)}
           />
         </div>
@@ -106,52 +128,45 @@ const InputDock = () => {
           <h4 className="font-bold text-sm mb-2">Bolt</h4>
           
           {/* Diameter */}
-          <SelectDropdown
-            name="Diameter (mm)"
-            options={[
-              { value: "section1", label: "Section 1" },
-              { value: "section2", label: "Section 2" },
-            ]}
-            selectedValues={boltDiameter}
-            setSelectedValues={setBoltDiameter}
+          <InputField
+            className="w-[70%]"
+            label="Diameter (mm)"
+            name="diameter"
+            value={bolt_diameter}
+            onChange={(e) => setBoltDiameter(e.target.value)}
           />
           
           {/* Type */}
           <SelectDropdown
             name="Type"
             options={[
-              { value: "section1", label: "Section 1" },
-              { value: "section2", label: "Section 2" },
+              { value: "bearing_bolt", label: "Bearing Bolt" },
+              { value: "friction_grip_bolt", label: "Friction Grip Bolt" },
             ]}
-            selectedValues={boltType}
-            setSelectedValues={setBoltType}
+            selectedValue={bolt_type}
+            setSelectedValue={setBoltType}
           />
           
           {/* Property Class */}
-          <SelectDropdown
-            name="Property Class"
-            options={[
-              { value: "section1", label: "Section 1" },
-              { value: "section2", label: "Section 2" },
-            ]}
-            selectedValues={boltClass}
-            setSelectedValues={setBoltClass}
+          <InputField
+            className="w-[70%]"
+            label="Property Class"
+            name="property_class"
+            value={bolt_property_class}
+            onChange={(e) => setBoltClass(e.target.value)}
           />
         </div>
 
         {/* Plate */}
         <div className="">
           <h4 className="font-bold text-sm mb-2">Plate</h4>
-          
           {/* Thickness */}
-          <SelectDropdown
-            name="Thickness (mm)"
-            options={[
-              { value: "section1", label: "Section 1" },
-              { value: "section2", label: "Section 2" },
-            ]}
-            selectedValues={plateThickness}
-            setSelectedValues={setPlateThickness}
+          <InputField
+            className="w-[70%]"
+            label="Thickness (mm)"
+            name="thickness"
+            value={plate_thickness}
+            onChange={(e) => setPlateThickness(e.target.value)}
           />
         </div>
       </div>
@@ -162,14 +177,26 @@ const InputDock = () => {
             name={"Reset"}
             type="secondary"
             className="w-full bg-brown-600 text-white hover:bg-brown-700"
-            onClick={() => console.log("reset clicked")}
+            onClick={() => resetClicked()}
           />
           <Button
             key={"design"}
             name={"Design"}
             type="secondary"
             className="w-full bg-brown-600 text-white hover:bg-brown-700"
-            onClick={() => console.log("design clicked")}
+            onClick={() => hitBackend(
+              connection_type,
+              column_section,
+              beam_section,
+              material_grade,
+              shear_force,
+              axial_force,
+              bolt_diameter,
+              bolt_type,
+              bolt_property_class,
+              plate_thickness,
+              setFormValues
+            )}
           />
         </div>
     </div>

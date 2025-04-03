@@ -5,6 +5,8 @@ import HomeLandingPage from "./components/homelandingpage";
 import ConnectionPage from "./components/connectionpage";
 import EndPlateConnection from "./EndPlateConnection";
 
+export const BackendUrl:string = "http://localhost:8000/"
+
 function App() {
   return (
     <BrowserRouter>

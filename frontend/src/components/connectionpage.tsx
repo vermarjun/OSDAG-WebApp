@@ -4,6 +4,7 @@ import seatedangle from "/seatedangle.jpg"
 import cleatangle from "/cleatangle.jpg"
 import endplate from "/endplate.jpg"
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const topics = [
     { name: 'Shear Connection', link: 'Shear Connection' },
@@ -65,12 +66,26 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({ name, image, isSelected
 };
 
 function ConnectionPage() {
+  const navigate = useNavigate();
     const [selectedConnection, setSelectedConnection] = useState<string | null>(null);
-  
     const handleCardClick = (name: string) => {
       setSelectedConnection(name === selectedConnection ? null : name);
     };
-  
+    
+    function handleStartClick(){
+      if (selectedConnection == "End Plate"){
+        navigate("/endplateconnection")
+      } else if (selectedConnection == "Fin Plate"){
+        navigate("/finplateconnection")
+      } else if (selectedConnection == "Cleat Angle"){
+        navigate("/cleatedangleconnection")
+      } else if (selectedConnection == "Seated Angle"){
+        navigate("/seatedangleconnection")
+      } else {
+        alert("select a connection first")
+      }
+    }
+
     return (
       <div className="w-full h-screen flex flex-col bg-[#F0F0F0] py-2">
         <div className="py-2 pr-2">
@@ -94,7 +109,7 @@ function ConnectionPage() {
               name="Start"
               type="secondary"
               className="w-60 bg-brown-600 text-white hover:bg-brown-700"
-              onClick={() => console.log("clicked")}
+              onClick={() => handleStartClick()}
             />
           </div>
         </div>
